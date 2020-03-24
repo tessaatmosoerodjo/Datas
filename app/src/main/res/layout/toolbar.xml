@@ -9,7 +9,6 @@
     android:id="@+id/main_toolbar"
     android:minHeight="?attr/actionBarSize"
     android:fitsSystemWindows="false"
-    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     tools:context=".MainActivity">
 
     <ImageView
@@ -19,9 +18,5 @@
         android:adjustViewBounds="true"
         android:layout_gravity="center"
         />
-
-
-
-
 
 </androidx.appcompat.widget.Toolbar>

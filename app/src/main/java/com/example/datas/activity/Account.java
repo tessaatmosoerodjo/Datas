@@ -3,15 +3,22 @@ package com.example.datas.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.app.AlertDialog;
+
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+
 import android.view.View;
 import android.widget.Button;
+
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import  android.app.AlertDialog;
+
+import com.example.datas.MainActivity;
 import com.example.datas.entity.Customer;
 import com.example.datas.database.Database;
 import com.example.datas.Login;
@@ -20,6 +27,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Account extends AppCompatActivity {
 
@@ -29,9 +37,12 @@ public class Account extends AppCompatActivity {
     private TextInputEditText dialogPassword, accountName, accountStreet, accountPhone, accountPlace;
     private TextInputLayout dialogPasswordLayout;
     private Database databaseHelper;
-    public Customer customer;
+    private Customer customer;
     private static String user;
-    int id_To_Update = 0;
+
+    ImageView updateBackBtn;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +76,29 @@ public class Account extends AppCompatActivity {
             }
         });
 
+        updateBackBtn = findViewById(R.id.updateBackBtn);
+
+        updateBackBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Account.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
     }
 
+    private void goToAccount() {
+        goToPreviousActivity(RESULT_CANCELED,"");
+    }
+
+    void goToPreviousActivity(int ResultCode,String message){
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("snackbarMessage", message);
+        setResult(ResultCode, intent);
+        finish();
+    }
 
     public void displayUser() {
 
@@ -100,66 +131,38 @@ public class Account extends AppCompatActivity {
     }
 
     private void delete() {
-        Cursor user_id = databaseHelper.findActiveUser();
 
-        user = user_id.getString(user_id.getColumnIndex("id"));
+        Cursor active = databaseHelper.findActiveUser();
+        if (active.getCount() > 0) {
+            if (active.moveToFirst()) {
 
-//        final boolean deleteRequest =
+                user = active.getString(active.getColumnIndex("id"));
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.deleteContact)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.deleteContact)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-//                        databaseHelper.deleteContact(user);
-                        databaseHelper.deleteCustomer(user);
-                        Toast.makeText(getApplicationContext(), "Deleted Successfully", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), Login.class);
-                        startActivity(intent);
-                    }
-                })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
-                });
-        AlertDialog d = builder.create();
-        d.setTitle("Are you sure ?");
-        d.show();
+                                databaseHelper.deleteCustomer(user);
+                                Toast.makeText(getApplicationContext(), "Deleted Successfully", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), Login.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                            }
+                        });
+                AlertDialog d = builder.create();
+                d.setTitle("Are you sure ?");
+                d.show();
 
 
-    }
+            }
 
-    private void deleteAccount(){
-        Cursor user_id = databaseHelper.findActiveUser();
 
-        user = user_id.getString(user_id.getColumnIndex("id"));
-
-        final boolean deleteRequest = databaseHelper.deleteCustomer(user);
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setMessage(R.string.deleteContact)
-
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        if (deleteRequest) {
-                            Toast.makeText(getApplicationContext(), "Deleted Successfully", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getApplicationContext(), Login.class);
-                            startActivity(intent);
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getApplicationContext(), "Er is iets misgegaan", Toast.LENGTH_SHORT).show();
-                    }
-                });
-        android.app.AlertDialog d = builder.create();
-        d.setTitle("Are you sure ?");
-        d.show();
+        }
 
     }
-
-
-
-
 
 }

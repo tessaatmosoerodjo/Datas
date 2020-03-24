@@ -135,6 +135,24 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
+
+
+    public boolean deleteUser(int id, String password) {
+        SQLiteDatabase db = getWritableDatabase();
+        int deleteQuery;
+        try {
+            deleteQuery = db.delete(TABLE_CUSTOMERS, "id=? and password = ?", new String[]{String.valueOf(id), password});
+            return deleteQuery > 0;
+        }catch (SQLiteException e){
+            return false;
+        }
+
+
+    }
+
+
+
+
     public Integer deleteContact(Integer id){
         SQLiteDatabase db=this.getWritableDatabase();
         return db.delete("customer","id = ?",new String[]{Integer.toString(id)});

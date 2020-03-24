@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.example.datas.Login;
 import com.example.datas.database.Database;
 import com.example.datas.MainActivity;
 import com.example.datas.R;
@@ -18,6 +20,11 @@ import com.google.android.material.textfield.TextInputEditText;
 public class Update extends AppCompatActivity {
     Button updateUserBtn;
     TextInputEditText updatePhone;
+
+
+    public static final String email = "email@email.com";
+
+    public String emailtext;
 
 
     @Override
@@ -38,6 +45,12 @@ public class Update extends AppCompatActivity {
     }
 
     private void updateUser(){
+
+        Intent intent = getIntent();
+        emailtext = intent.getStringExtra(email);
+        Intent login = new Intent(this, Account.class);
+        startActivity(login);
+
         AsyncUpdateUser updateUserTask = new AsyncUpdateUser();
 
         ContentValues contentValues = new ContentValues();

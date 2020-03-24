@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Location"
+        android:textSize="20dp"
+        android:textStyle="italic"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"/>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="106dp"
+        android:orientation="vertical"
+        android:paddingTop="10dp"
+        tools:ignore="MissingConstraints">
+
+        <Button
+            android:id="@+id/locationCentrum"
+            android:layout_width="match_parent"
+            android:layout_height="31dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/cardview_shadow_end_color"
+            android:onClick="handleFragment"
+            android:text="Location centrum"
+            android:textColor="#e6b120" />
+
+
+        <Button
+            android:id="@+id/locationShop"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/cardview_shadow_end_color"
+            android:onClick="handleFragment"
+            android:text="Location Shop"
+            android:textColor="#e6b120" />
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </FrameLayout>
+
+
+</LinearLayout>

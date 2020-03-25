@@ -40,7 +40,6 @@ public class Account extends AppCompatActivity {
     private Customer customer;
     private static String user;
 
-    ImageView updateBackBtn;
 
 
 
@@ -76,28 +75,7 @@ public class Account extends AppCompatActivity {
             }
         });
 
-        updateBackBtn = findViewById(R.id.updateBackBtn);
 
-        updateBackBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Account.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-    }
-
-    private void goToAccount() {
-        goToPreviousActivity(RESULT_CANCELED,"");
-    }
-
-    void goToPreviousActivity(int ResultCode,String message){
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("snackbarMessage", message);
-        setResult(ResultCode, intent);
-        finish();
     }
 
     public void displayUser() {

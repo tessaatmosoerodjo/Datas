@@ -2,35 +2,34 @@ package com.example.datas.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.datas.Login;
 import com.example.datas.database.Database;
-import com.example.datas.MainActivity;
 import com.example.datas.R;
 import com.google.android.material.textfield.TextInputEditText;
+
 
 public class Update extends AppCompatActivity {
     Button updateUserBtn;
     TextInputEditText updatePhone;
-
+    Database database;
+    private static String user;
 
     public static final String email = "email@email.com";
-
     public String emailtext;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update);
+
+        database = new Database(getApplicationContext());
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN); //set app als fullscreen
         updateUserBtn = findViewById(R.id.UpdateUserBtn);
@@ -42,59 +41,31 @@ public class Update extends AppCompatActivity {
                 updateUser();
             }
         });
+
     }
 
-    private void updateUser(){
+    private void updateUser() {
 
-        Intent intent = getIntent();
-        emailtext = intent.getStringExtra(email);
-        Intent login = new Intent(this, Account.class);
-        startActivity(login);
+        String phone = updatePhone.getText().toString();
 
-        AsyncUpdateUser updateUserTask = new AsyncUpdateUser();
+        Cursor active = database.findActiveUser();
+        if (active.getCount() > 0) {
+            if (active.moveToFirst()) {
+                user = active.getString(active.getColumnIndex("id"));
 
-        ContentValues contentValues = new ContentValues();
+                boolean isUpdate = database.updateData(user, phone);
+                if (isUpdate == true) {
+                    Toast.makeText(Update.this, "Data Update", Toast.LENGTH_LONG).show();
 
-        contentValues.put("phone", updatePhone.getText().toString());
+                } else
+                    Toast.makeText(Update.this, "Data not Updated", Toast.LENGTH_LONG).show();
 
-        updateUserTask.execute(contentValues);
-    }
-
-    private class AsyncUpdateUser extends AsyncTask<ContentValues,Integer,String> {
-        Database database;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            database = new Database(Update.this);
-        }
-
-
-        @Override
-        protected String doInBackground(ContentValues... contentValues)
-        {
-            if(!database.updateCustomer(contentValues[0])){
-                return "Er is iets misgegaan";
+                Intent intent = getIntent();
+                emailtext = intent.getStringExtra(email);
+                Intent update = new Intent(this, Account.class);
+                startActivity(update);
+                }
             }
-            return "Gegevens successvol aangepast";
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            goToPreviousActivity(RESULT_OK,s);
         }
     }
-    void goToPreviousActivity(int ResultCode,String message){
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("snackbarMessage", message);
-        setResult(ResultCode, intent);
-        finish();
-    }
 
-
-}
